@@ -6,7 +6,6 @@ public class ShiftTheElements {
     private static int[] outputArray;
     private static int shift = 4;
 
-
     public static int[] getInputArray() {
         return inputArray;
     }
