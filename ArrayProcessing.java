@@ -1,18 +1,22 @@
 public class Main {
     public static void main(String[] args) {
 
-        int[] inputArray = {3, 4, 3, 7, 7, 8, 3, 0, 5, 1};
-        ArrayProcessing uniqueArray = new ArrayProcessing();
-        int [] resultArray = uniqueArray.getUniqueArray(inputArray);
+        int[] inputArray = {1, 5, 1, 3, 1, 4, 1, 3, 3, 3, 1, 2, 1, 2, 3, 1, 2, 2};
+        ArrayProcessing arrayProcessing = new ArrayProcessing();
+        int [] resultArray = arrayProcessing.getUniqueArray(inputArray);
         System.out.println("Exercise 1");
         printArray(resultArray);
 
         int [] firstArray = {1, 2, 4, 5, 1, 9, 1};
         int [] secondArray = {1, 3, 7, 5, 3, 8, 3};
-        ArrayProcessing uniqueArrayFromTwo = new ArrayProcessing();
-        int [] outputArray = uniqueArrayFromTwo.getUniqueArray(firstArray, secondArray);
+        int [] outputArray = arrayProcessing.getUniqueArray(firstArray, secondArray);
         System.out.println("Exercise 2");
         printArray(outputArray);
+
+        int [] firstArrayT3 = {1, 2, 4, 5, 1, 3, 9, 1};
+        int [] secondArrayT3 = {1, 3, 7, 5, 8, 0};
+        System.out.println("Exercise 3");
+        printArray(arrayProcessing.getCommonElements(firstArrayT3, secondArrayT3));
     }
 
     public static void printArray (int... array )
@@ -38,23 +42,22 @@ public class ArrayProcessing {
             }
         }
         int uniqueArrayLength = inputArray.length - numberOfRepeated;
+        int index = uniqueArrayLength - 1;
         int[] uniqueArray = new int[uniqueArrayLength];
-        int temp = 0;
-        for (int i = inputArray.length - 1; i > 0; i--) {
-            if (inputArray[i] != inputArray[i - 1]) {
-                temp++;
-                for (int j = uniqueArrayLength - temp; j >= 0; j--) {
-                    if (uniqueArray[j] != inputArray[i]) {
-                        if (i != 1) {
-                            uniqueArray[j] = inputArray[i];
-                        }
-                        if (i == 1) {
-                            uniqueArray[j] = inputArray[i];
-                            uniqueArray[j - 1] = inputArray[i - 1];
-                        }
-                        break;
-                    }
+
+        for (int i = inputArray.length - 1; i >= 0; i--) {
+            boolean toAdd = true;
+            for (int j = i-1; j >= 0 ; j--) {
+                if (inputArray[i] == inputArray[j])
+                {
+                    toAdd = false;
+                    break;
                 }
+            }
+            if (toAdd)
+            {
+                uniqueArray[index] = inputArray[i];
+                index--;
             }
         }
         return uniqueArray;
@@ -106,5 +109,39 @@ public class ArrayProcessing {
             }
         }
         return resultArray;
+    }
+
+    public int[] getCommonElements (int[] firstArray, int[] secondArray)
+    {
+        int firstArrLen = firstArray.length;
+        int secondArrLen = secondArray.length;
+        int [] tempArray = new int[firstArrLen + secondArrLen];
+        String tempStr = "";
+
+        for (int i = 0; i < firstArrLen; i++) {
+            boolean toAdd = false;
+            for (int j = 0; j < secondArrLen; j++) {
+                if (firstArray[i] == secondArray[j])
+                {
+                    toAdd = true;
+                }
+            }
+
+            if (toAdd)
+            {
+                tempStr += firstArray[i] + "|";
+            }
+        }
+
+        String[] tempStrArr = tempStr.split("\\|");
+        int [] outputArray = new int[tempStrArr.length];
+        int i = 0;
+        for (String val: tempStrArr
+             ) {
+            outputArray[i] = Integer.parseInt(val);
+            i++;
+        }
+
+        return getUniqueArray(outputArray);
     }
 }
