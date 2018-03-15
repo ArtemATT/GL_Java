@@ -19,6 +19,8 @@ class Node{
     }
 }
 
+import java.util.StringJoiner;
+
 public class LinkedList {
     private Node firstNode;
     private Node lastNode;
@@ -27,58 +29,112 @@ public class LinkedList {
     public LinkedList() {
     }
 
-    public String toString()
-    {
-        String linkedList;
-
-        if (firstNode == null)
-            linkedList = "[ No Elements ]";
-
-        else {
-            linkedList = "[ " + firstNode.getData().toString();
-
-            lastNode = firstNode.getNext();
-            while (lastNode.getNext() != null)
-            {
-                linkedList += " " + lastNode.getData().toString();
-                lastNode = lastNode.getNext();
-            }
+    public String toString() {
+        if (firstNode == null) {
+            return "[ No Elements ]";
         }
-        return linkedList + " ]";
+        StringJoiner stringJoiner = new StringJoiner(" ", "[", "]");
+        Node nextNode = firstNode;
+        do {
+            stringJoiner.add(String.valueOf(nextNode.getData()));
+            nextNode = nextNode.getNext();
+
+        } while (nextNode != null);
+
+        return stringJoiner.toString();
     }
 
     public void add(Integer data) {
+        Node tempNodeNode = new Node();
+        tempNodeNode.setData(data);
+        tempNodeNode.setNext(null);
 
-        if (firstNode == null)
-        {
-            firstNode = new Node();
-            lastNode = new Node();
-            firstNode.setData(data);
-            firstNode.setNext(lastNode);
+        Node lastNode = this.lastNode;
+        this.lastNode = tempNodeNode;
+        if (lastNode == null) {
+            firstNode = tempNodeNode;
+        } else {
+            lastNode.setNext(tempNodeNode);
         }
+        this.size++;
+    }
 
-        else if (lastNode != null)
-        {
-            while (lastNode.getNext() != null){
-                lastNode = lastNode.getNext();
+    public Integer get(int index) {
+
+        if (index > this.size || index < 0 || this.size == 0)
+            return null;
+
+        else {
+            int count = 0;
+            Node tempNode = firstNode;
+
+            while (count != index) {
+                tempNode = tempNode.getNext();
+                count++;
             }
-            lastNode.setData(data);
-            lastNode.setNext(new Node());
+
+            if (tempNode != null) {
+                return tempNode.getData();}
+
+            else return null;
         }
-        size++;
+    }
+
+    public boolean delete(int index) {
+
+        if (index > this.size || index < 0 || this.size == 0) {
+            return false;
+        }
+
+        else {
+            int count = 0;
+            Node tempNode = firstNode;
+
+            if (index == 0) {
+                this.firstNode = firstNode.getNext();
+            }
+
+            else {
+                while (count != index -1) {
+                    tempNode = tempNode.getNext();
+                    count++;
+                }
+
+                if (tempNode == lastNode ) {
+                    tempNode.setNext(null);
+                    lastNode = tempNode;
+                }
+
+                else {
+                    tempNode.setNext(tempNode.getNext().getNext());
+                }
+            }
+            this.size--;
+            return true;
+        }
+    }
+
+    public int size() {
+        if (this.size != 0) {
+            return this.size;
+        }
+        return 0;
     }
 }
+
 
 public class Main {
     public static void main(String[] args) {
 
         LinkedList artLinkedList = new LinkedList();
-        artLinkedList.add(111);
-        artLinkedList.add(222);
-        artLinkedList.add(333);
-        artLinkedList.add(444);
-        artLinkedList.add(555);
-
-        System.out.println(artLinkedList.toString());
+            for (int i = 0; i < 10; i++) {
+            artLinkedList.add(i);
+        }
+        System.out.println("Linked list size is: " + artLinkedList.size());
+        System.out.println("Fourth element before deletion: " + artLinkedList.get(4));
+        artLinkedList.delete(4);
+        System.out.println("Fourth element after deletion: " + artLinkedList.get(4));
+        System.out.println("Linked list size is: " + artLinkedList.size());
+        System.out.println("Linked list is: " + artLinkedList.toString());
     }
 }
